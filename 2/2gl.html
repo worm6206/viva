@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="../js/vivagraph.js"></script>
+    <script type="text/javascript" src="../js/untar.js"></script>
+    <script type="text/javascript">
+
+        var allText;
+        var i=0;
+        var arrayofStrings;
+        var count=0;
+
+        function readTextFile(file)
+        {
+            var rawFile = new XMLHttpRequest();
+            rawFile.open("GET", file, false);
+            rawFile.onreadystatechange = function ()
+            {
+                if(rawFile.readyState === 4)
+                {
+                    if(rawFile.status === 200 || rawFile.status == 0)
+                    {
+                        allText = rawFile.responseText;
+                        // alert(allText);
+                    }
+                }
+            }
+            rawFile.send(null);
+        }
+
+        function removeComment(string)
+        {
+            if(string[i]=='%')
+            {
+                while(string[++i]!='\n');
+                i++;
+                removeComment(string);
+            }
+
+        }
+
+        function splitString(string, sep)
+        {
+            arrayofStrings = string.split(sep);
+
+        }
+
+        
+
+        //store text file into allText
+        readTextFile("./c-40.mtx");
+
+        //remove lines start with '%'
+        removeComment(allText);
+        allText = allText.substring(i,allText.length);
+
+        //replace \n with space, then use space to split string into array.
+        allText = allText.replace(/\n/g," ");
+        splitString(allText,' ');
+
+        //till this point the coordinate data is stored inside array "arrayofStrings"
+        // alert(allText);
+
+        function main_x () {
+            // Step 1. We create a graph object.
+            var graph = Viva.Graph.graph();
+            // Step 2. We add nodes and edges to the graph:
+            for (var i = 0; i < arrayofStrings[2]; i++) {
+                graph.addLink(arrayofStrings[3+i*3],arrayofStrings[3+i*3+1]);
+                // console.log(arrayofStrings[3+i*3] + " " + arrayofStrings[3+i*3+1]);
+                if(arrayofStrings[3+i*3]!=arrayofStrings[3+i*3+1]) count++;
+            };
+            /* Note: graph.addLink() creates new nodes if they are not yet
+               present in the graph. Thus calling this method is equivalent to:
+               graph.addNode(1);
+               graph.addNode(2);
+               graph.addLink(1, 2);
+            */
+            // Step 3. Render the graph.
+            var renderer = Viva.Graph.View.renderer(graph);
+            renderer.run();
+            // alert("total edges: " + count);
+        }
+
+        /*global Viva*/
+        function main() {
+            var graphGenerator = Viva.Graph.generator();
+
+            var graph = Viva.Graph.graph();
+            for (var i = 0; i < arrayofStrings[2]; i++) {
+                graph.addLink(arrayofStrings[3+i*3],arrayofStrings[3+i*3+1]);
+                // console.log(arrayofStrings[3+i*3] + " " + arrayofStrings[3+i*3+1]);
+                if(arrayofStrings[3+i*3]!=arrayofStrings[3+i*3+1]) count++;
+            };
+
+            //var graph = graphGenerator.randomNoLinks(500);
+            //var graph = graphGenerator.completeBipartite(100, 1);
+            //var graph = graphGenerator.complete(2);
+            //var graph = graphGenerator.grid(100, 100);
+            //var graph = graphGenerator.balancedBinTree(10);
+            //var graph = graphGenerator.ladder(1000);
+            //var graph = Viva.Graph.graph();
+            //graph.addLink(1, 2);
+
+            var layout = Viva.Graph.Layout.forceDirected(graph, {
+               springLength : 30,
+               springCoeff : 0.0008,
+               dragCoeff : 0.01,
+               gravity : -1.2,
+               theta : 1
+            });
+
+            var graphics = Viva.Graph.View.webglGraphics();
+
+            var renderer = Viva.Graph.View.renderer(graph,
+                {
+                    layout     : layout,
+                    graphics   : graphics,
+                    renderLinks : true,
+                    prerender  : true
+                });
+
+            renderer.run();
+            document.querySelector('.spec').innerHTML = 'vertices: ' + arrayofStrings[0] + '<br>edges: ' + count;
+        }
+
+    </script>
+
+    
+        <style type='text/css'>
+            body {
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                overflow: hidden;
+            }
+            canvas {
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+</head>
+<body onload='main()'>
+<div class="spec"></div>
+</body>
+</html>
