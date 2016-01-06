@@ -8,6 +8,7 @@
         var i=0;
         var arrayofStrings;
         var count=0;
+        var k;
 
         function readTextFile(file)
         {
@@ -70,36 +71,18 @@
         //till this point the coordinate data is stored inside array "arrayofStrings"
         // alert(allText);
 
-        function main_x () {
-            // Step 1. We create a graph object.
-            var graph = Viva.Graph.graph();
-            // Step 2. We add nodes and edges to the graph:
-            for (var i = 0; i < arrayofStrings[2]; i++) {
-                graph.addLink(arrayofStrings[3+i*3],arrayofStrings[3+i*3+1]);
-                // console.log(arrayofStrings[3+i*3] + " " + arrayofStrings[3+i*3+1]);
-                if(arrayofStrings[3+i*3]!=arrayofStrings[3+i*3+1]) count++;
-            };
-            /* Note: graph.addLink() creates new nodes if they are not yet
-               present in the graph. Thus calling this method is equivalent to:
-               graph.addNode(1);
-               graph.addNode(2);
-               graph.addLink(1, 2);
-            */
-            // Step 3. Render the graph.
-            var renderer = Viva.Graph.View.renderer(graph);
-            renderer.run();
-            // alert("total edges: " + count);
-        }
-
         /*global Viva*/
         function main() {
             var graphGenerator = Viva.Graph.generator();
-
             var graph = Viva.Graph.graph();
+            if((arrayofStrings[2]*2 + 3) == arrayofStrings.length) 
+                k = 2;
+            else
+                k = 3;
             for (var i = 0; i < arrayofStrings[2]; i++) {
-                graph.addLink(arrayofStrings[3+i*3],arrayofStrings[3+i*3+1]);
+                graph.addLink(arrayofStrings[3+i*k],arrayofStrings[3+i*k+1]);
                 // console.log(arrayofStrings[3+i*3] + " " + arrayofStrings[3+i*3+1]);
-                if(arrayofStrings[3+i*3]!=arrayofStrings[3+i*3+1]) count++;
+                if(arrayofStrings[3+i*k]!=arrayofStrings[3+i*k+1]) count++;
             };
 
             //var graph = graphGenerator.randomNoLinks(500);
