@@ -39,5 +39,5 @@ $files = scan_dir($dir);
 foreach(array_reverse($files) as $key=>$value): 
 if (strpos($value,'mtx') !== false) {
 ?>
-    <a type="button" class="btn btn-default" target="main" href="./all.html?<?php echo $value; ?>"><?php echo "[".filesize($value). "]<br>" . $value ; ?></a><br><br>
+    <a type="button" class="btn btn-default btn-sm" target="main" href="./all.html?<?php echo $value; ?>"><?php echo "[".filesize($value). "]<br>" . $value ; ?></a><br><br>
     <?php } endforeach; ?>
