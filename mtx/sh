@@ -1,0 +1,5 @@
+for f in *.tar.gz ; do tar -xzvf $f ; done
+for f in *.tar.gz ; do rm $f ; done
+mv **/* ./
+find . -empty -type d -delete
+for f in *.mtx ; do chmod 664 $f ; done

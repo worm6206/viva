@@ -57,28 +57,6 @@
 
         //till this point the coordinate data is stored inside array "arrayofStrings"
         // alert(allText);
-
-        function main_x () {
-            // Step 1. We create a graph object.
-            var graph = Viva.Graph.graph();
-            // Step 2. We add nodes and edges to the graph:
-            for (var i = 0; i < arrayofStrings[2]; i++) {
-                graph.addLink(arrayofStrings[3+i*3],arrayofStrings[3+i*3+1]);
-                // console.log(arrayofStrings[3+i*3] + " " + arrayofStrings[3+i*3+1]);
-                if(arrayofStrings[3+i*3]!=arrayofStrings[3+i*3+1]) count++;
-            };
-            /* Note: graph.addLink() creates new nodes if they are not yet
-               present in the graph. Thus calling this method is equivalent to:
-               graph.addNode(1);
-               graph.addNode(2);
-               graph.addLink(1, 2);
-            */
-            // Step 3. Render the graph.
-            var renderer = Viva.Graph.View.renderer(graph);
-            renderer.run();
-            // alert("total edges: " + count);
-        }
-
         /*global Viva*/
         function main() {
             var graphGenerator = Viva.Graph.generator();
@@ -107,18 +85,62 @@
                theta : 1
             });
 
-            var graphics = Viva.Graph.View.webglGraphics();
-
-            var renderer = Viva.Graph.View.renderer(graph,
-                {
-                    layout     : layout,
-                    graphics   : graphics,
-                    renderLinks : true,
-                    prerender  : true
-                });
-
-            renderer.run();
+            var processingElement = document.getElementById('log');
             document.querySelector('.spec').innerHTML = 'vertices: ' + arrayofStrings[0] + '<br>edges: ' + count;
+
+            precompute(1000, renderGraph);
+
+            function precompute(iterations, callback) {
+              // let's run 10 iterations per event loop cycle:
+              var i = 0;
+              while (iterations > 0 && i < 10) {
+                layout.step();
+                iterations--;
+                i++;
+              }
+              processingElement.innerHTML = 'Layout precompute: ' + iterations;
+              if (iterations > 0) {
+                setTimeout(function () {
+                    precompute(iterations, callback);
+                }, 0); // keep going in next even cycle
+              } else {
+                // we are done!
+                callback();
+              }
+            }
+            function renderGraph() {
+                var graphics = Viva.Graph.View.webglGraphics();
+
+                var renderer = Viva.Graph.View.renderer(graph,
+                    {
+                        layout     : layout,
+                        graphics   : graphics,
+                        renderLinks : true,
+                        prerender  : true
+                    });
+
+                renderer.run();
+
+                // Final bit: most likely graph will take more space than available
+                // screen. Let's zoom out to fit it into the view:
+                var graphRect = layout.getGraphRect();
+                var graphSize = Math.min(graphRect.x2 - graphRect.x1, graphRect.y2 - graphRect.y1);
+                var screenSize = Math.min(document.body.clientWidth, document.body.clientHeight);
+
+                var desiredScale = screenSize / graphSize;
+                zoomOut(desiredScale, 1);
+
+                function zoomOut(desiredScale, currentScale) {
+                    // zoom API in vivagraph 0.5.x is silly. There is no way to pass transform
+                    // directly. Maybe it will be fixed in future, for now this is the best I could do:
+                    if (desiredScale < currentScale) {
+                      currentScale = renderer.zoomOut();
+                      setTimeout(function () {
+                          zoomOut(desiredScale, currentScale);
+                      }, 16);
+                    }
+                }
+            }
         }
 
     </script>
@@ -139,5 +161,6 @@
 </head>
 <body onload='main()'>
 <div class="spec"></div>
+<div id='log'></div>
 </body>
 </html>
