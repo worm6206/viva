@@ -30,7 +30,7 @@ $files = scan_dir($dir);
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 </head>
 <br>
-<a type="button" class="btn btn-primary btn-xs" role="button" target="_self" href="allp.php">Use Precompute</a>
+<a type="button" class="btn btn-primary btn-xs" role="button" target="_self" href="all.php">Use Precompute</a>
 <br>
 <br>
 
