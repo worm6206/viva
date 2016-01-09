@@ -4253,7 +4253,7 @@ function renderer(graph, settings) {
       }
 
       renderIterations(iterationsCount);
-
+      window.setTimeout(function(){animationTimer.stop();}, 2000);
       return this;
     },
 
