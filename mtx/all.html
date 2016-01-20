@@ -115,6 +115,11 @@
 
             renderer.run();
             document.querySelector('.spec').innerHTML = ''+ path +'<br>vertices: ' + arrayofStrings[0] + '<br>edges: ' + count;
+            document.body.addEventListener('keydown', function (e) {
+                    if (e.which === 32) { // spacebar
+                        renderer.pause();
+                    }
+                });
         }
 
     </script>
