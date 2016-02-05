@@ -164,7 +164,7 @@
 	        // draw neighbors & edges
 
 	        for (var i = 0; i < links.length; i++) {
-	            if (links[i].fromId === links[i].toId) break;
+	            if (links[i].fromId === links[i].toId) continue;
 	            if (links[i].fromId === node.id)
 	                DrawNode(links[i].toId);
 	            else
