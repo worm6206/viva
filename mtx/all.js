@@ -64,7 +64,7 @@
 	    var graphGenerator = Viva.Graph.generator();
 	    var graph = Viva.Graph.graph();
 	    var pause = false;
-	    var displayTag = true;
+	    var displayTag = false;
 	    var container = document.body;
 
 //**************************************************
@@ -104,39 +104,40 @@
 	    });
 
 //*********************** Labels ***************************
-//Default the labels are on the nodes
+//Default the labels are hidden, so comment out
+//It's EXTREMELY laggy if turned on with some giant graph
 //**************************************************
 
-	    var domLabels = generateDOMLabels(graph);
-	    graphics.placeNode(function(ui, pos) {
-	        var domPos = {
-	            x: pos.x,
-	            y: pos.y
-	        };
-	        // And ask graphics to transform it to DOM coordinates:
-	        graphics.transformGraphToClientCoordinates(domPos);
+	    // var domLabels = generateDOMLabels(graph);
+	    // graphics.placeNode(function(ui, pos) {
+	    //     var domPos = {
+	    //         x: pos.x,
+	    //         y: pos.y
+	    //     };
+	    //     // And ask graphics to transform it to DOM coordinates:
+	    //     graphics.transformGraphToClientCoordinates(domPos);
 
-	        // then move corresponding dom label to its own position:
-	        var nodeId = ui.node.id;
-	        var labelStyle = domLabels[nodeId].style;
-	        labelStyle.left = domPos.x + 'px';
-	        labelStyle.top = domPos.y + 'px';
-	    });
+	    //     // then move corresponding dom label to its own position:
+	    //     var nodeId = ui.node.id;
+	    //     var labelStyle = domLabels[nodeId].style;
+	    //     labelStyle.left = domPos.x + 'px';
+	    //     labelStyle.top = domPos.y + 'px';
+	    // });
 
-	    function generateDOMLabels(graph) {
-	        // this will map node id into DOM element
-	        var labels = Object.create(null);
-	        graph.forEachNode(function(node) {
-	            var label = document.createElement('span');
-	            label.classList.add('node-label');
-	            label.innerText = node.id;
-	            labels[node.id] = label;
-	            container.appendChild(label);
-	        });
-	        // NOTE: If your graph changes over time you will need to
-	        // monitor graph changes and update DOM elements accordingly
-	        return labels;
-	    }
+	    // function generateDOMLabels(graph) {
+	    //     // this will map node id into DOM element
+	    //     var labels = Object.create(null);
+	    //     graph.forEachNode(function(node) {
+	    //         var label = document.createElement('span');
+	    //         label.classList.add('node-label');
+	    //         label.innerText = node.id;
+	    //         labels[node.id] = label;
+	    //         container.appendChild(label);
+	    //     });
+	    //     // NOTE: If your graph changes over time you will need to
+	    //     // monitor graph changes and update DOM elements accordingly
+	    //     return labels;
+	    // }
 
 //**************************************************
 // run renderer after appending the labels to position
@@ -242,7 +243,7 @@
 	            if (displayTag) {
 	                $('.node-label').remove();
 	            } else {
-	                domLabels = generateDOMLabels(graph);
+	                var domLabels = generateDOMLabels(graph);
 	                graphics.placeNode(function(ui, pos) {
 	                    var domPos = {
 	                        x: pos.x,
