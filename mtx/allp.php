@@ -35,10 +35,14 @@ $files = scan_dir($dir);
 <br>
 <br>
 
+<div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+
 <?php 
 
 foreach(array_reverse($files) as $key=>$value): 
 if (strpos($value,'mtx') !== false) {
 ?>
-    <a type="button" class="btn btn-default btn-sm" target="main" href="./allp.html?<?php echo $value; ?>"><?php echo "[".filesize($value). "]<br>" . $value ; ?></a><br><br>
+    <a type="button" class="btn btn-default btn-sm" target="main" href="./allp.html?<?php echo $value; ?>"><?php echo "[".filesize($value). "]<br>" . $value ; ?></a>
     <?php } endforeach; ?>
+
+</div>

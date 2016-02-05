@@ -1,149 +1,114 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <link href='https://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
-    <script type="text/javascript" src="../js/vivagraph.js"></script>
-    <script type="text/javascript">
-
-        var allText;
-        var i=0;
-        var arrayofStrings;
-        var count=0;
-        var k;
-
-        function readTextFile(file)
-        {
-            var rawFile = new XMLHttpRequest();
-            rawFile.open("GET", file, false);
-            rawFile.onreadystatechange = function ()
-            {
-                if(rawFile.readyState === 4)
-                {
-                    if(rawFile.status === 200 || rawFile.status == 0)
-                    {
-                        allText = rawFile.responseText;
-                        // alert(allText);
-                    }
-                }
-            }
-            rawFile.send(null);
-        }
-
-        function removeComment(string)
-        {
-            if(string[i]=='%')
-            {
-                while(string[++i]!='\n');
-                i++;
-                removeComment(string);
-            }
-
-        }
-
-        function splitString(string, sep)
-        {
-            arrayofStrings = string.split(sep);
-
-        }
-
-        // var path = "<?php echo "Test"; ?>";
-        var path = window.location.href;
-        var num = path.indexOf("?");
-        num++;
-        var path2=[];
-        for(var j = 0; j<path.length-num;j++)
-        {
-            path2[j] = path[j+num];
-        }
-        path = null;
-        path = path2.join("");
-
-        //store text file into allText
-        readTextFile(path);
-
-        //remove lines start with '%'
-        removeComment(allText);
-        allText = allText.substring(i,allText.length);
-
-        //replace \n with space, then use space to split string into array.
-        allText = allText.replace(/\n/g," ");
-        splitString(allText,' ');
-
-        //till this point the coordinate data is stored inside array "arrayofStrings"
-        // alert(allText);
-
-        /*global Viva*/
-        function main() {
-            var graphGenerator = Viva.Graph.generator();
-            var graph = Viva.Graph.graph();
-            if((arrayofStrings.length-(arrayofStrings[2]*2 + 3))<=2) 
-                k = 2;
-            else
-                k = 3;
-            for (var i = 0; i < arrayofStrings[2]; i++) {
-                graph.addLink(arrayofStrings[3+i*k],arrayofStrings[3+i*k+1]);
-                // console.log(arrayofStrings[3+i*3] + " " + arrayofStrings[3+i*3+1]);
-                if(arrayofStrings[3+i*k]!=arrayofStrings[3+i*k+1]) count++;
-            };
-
-            //var graph = graphGenerator.randomNoLinks(500);
-            //var graph = graphGenerator.completeBipartite(100, 1);
-            //var graph = graphGenerator.complete(2);
-            //var graph = graphGenerator.grid(100, 100);
-            //var graph = graphGenerator.balancedBinTree(10);
-            //var graph = graphGenerator.ladder(1000);
-            //var graph = Viva.Graph.graph();
-            //graph.addLink(1, 2);
-
-            var layout = Viva.Graph.Layout.forceDirected(graph, {
-               springLength : 30,
-               springCoeff : 0.0008,
-               dragCoeff : 0.1,
-               gravity : -1.2,
-               theta : 1
-            });
-
-            var graphics = Viva.Graph.View.webglGraphics();
-
-            var renderer = Viva.Graph.View.renderer(graph,
-                {
-                    layout     : layout,
-                    graphics   : graphics,
-                    renderLinks : true,
-                    prerender  : true
-                });
-
-            renderer.run();
-            document.querySelector('.spec').innerHTML = ''+ path +'<br>vertices: ' + arrayofStrings[0] + '<br>edges: ' + count;
-            document.body.addEventListener('keydown', function (e) {
-                    if (e.which === 32) { // spacebar
-                        renderer.pause();
-                    }
-                });
-        }
-
-    </script>
-
-    
-   <style type='text/css'>
-      body, canvas {
-        font-family: 'Roboto', sans-serif;
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        overflow: hidden;
-        left: 0;
-        top: 0;
-      }
-      #log {
-        color: deepskyblue;
-      }
-      .spec {
-        color: deepskyblue;
-      }
-    </style>
-</head>
-<body onload='main()'  style="background-color: black;">
-<div class="spec"></div>
-</body>
+	<head>
+		<link href='https://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+		<script type="text/javascript" src="../js/vivagraph.js"></script>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		
+		<style type='text/css'>
+			body, html, canvas {
+				top: 0;
+				left:0;
+				height: 100%;
+				width: 100%;
+				position: absolute;
+				margin:0;
+				overflow: hidden;
+			}
+			.node-label {
+				position: absolute;
+				pointer-events: none;
+				color: white;
+				z-index: 10;
+			}
+			#log {
+				color: deepskyblue;
+			}
+			.spec {
+				color: deepskyblue;
+			}
+			.exactCenter {
+				width:160px;
+				height:70px;
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				margin-top: -80px;
+				margin-left: -35px;
+				color: white;
+			}
+			.bottomleft{
+				position: fixed;
+				color: white;
+				bottom: 0;
+				left: 0;
+				padding-left: 15px;
+			}
+			.topleft{
+				position: fixed;
+				color: white;
+				top: 0;
+				left: 0;
+				padding-left: 15px;
+			}
+			.pause-text{
+				position: fixed;
+				bottom: 2%;
+				left: 50%;
+				margin-left: -28px;
+				color: white;
+				opacity: 0;
+			}
+		</style>
+	</head>
+	<body onload='main()'  style="background-color: black;">
+		<div class="topleft">
+			<table class="table">
+				<caption>Graph Info
+				</caption>
+				<tbody>
+					<tr>
+						<td>Source</td>
+						<td><span class="path"></span></td>
+					</tr>
+					<tr>
+						<td>Nodes</td>
+						<td><span class="nodecount"></span></td>
+					</tr>
+					<tr>
+						<td>Links</td>
+						<td><span class="count"></span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div style="color: red;" class="pause-text"><h3><span class="label label-danger">Paused</span></h3></div>
+		<div class="exactCenter loading"><h1><span class="label label-default">Loading...</span></div></h1>
+		<div class="bottomleft">
+			<table class="table">
+				<caption>Keyboard instructions</caption>
+				<tbody>
+					<tr>
+						<td>ESC</td>
+						<td>Clear selection</td>
+					</tr>
+					<tr>
+						<td>T</td>
+						<td>Toggle tags</td>
+					</tr>
+					<tr>
+						<td>C</td>
+						<td>Toggle recenter
+						</td>
+					</tr>
+					<tr>
+						<td>Space</td>
+						<td>Toggle pause</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	<script src="all.js"></script>
+	</body>
 </html>
