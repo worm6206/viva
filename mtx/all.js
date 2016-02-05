@@ -124,20 +124,20 @@
 	    //     labelStyle.top = domPos.y + 'px';
 	    // });
 
-	    // function generateDOMLabels(graph) {
-	    //     // this will map node id into DOM element
-	    //     var labels = Object.create(null);
-	    //     graph.forEachNode(function(node) {
-	    //         var label = document.createElement('span');
-	    //         label.classList.add('node-label');
-	    //         label.innerText = node.id;
-	    //         labels[node.id] = label;
-	    //         container.appendChild(label);
-	    //     });
-	    //     // NOTE: If your graph changes over time you will need to
-	    //     // monitor graph changes and update DOM elements accordingly
-	    //     return labels;
-	    // }
+	    function generateDOMLabels(graph) {
+	        // this will map node id into DOM element
+	        var labels = Object.create(null);
+	        graph.forEachNode(function(node) {
+	            var label = document.createElement('span');
+	            label.classList.add('node-label');
+	            label.innerText = node.id;
+	            labels[node.id] = label;
+	            container.appendChild(label);
+	        });
+	        // NOTE: If your graph changes over time you will need to
+	        // monitor graph changes and update DOM elements accordingly
+	        return labels;
+	    }
 
 //**************************************************
 // run renderer after appending the labels to position
