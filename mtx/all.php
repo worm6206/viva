@@ -31,7 +31,7 @@ $files = scan_dir($dir);
 </head>
 <br>
 
-<a type="button" class="btn btn-primary btn-xs" role="button" target="_blank" href="https://github.com/worm6206/viva/blob/master/mtx/all.js">Js code on <br>GitHub</a>
+<a type="button" class="btn btn-primary btn-xs" role="button" target="_blank" href="https://github.com/worm6206/viva/blob/master/mtx/all.js">Source code<br>GitHub</a>
 <br>
 <br>
 <!-- <a type="button" class="btn btn-primary btn-xs" role="button" target="_self" href="allp.php">Use Precompute</a>
