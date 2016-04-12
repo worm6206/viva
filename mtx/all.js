@@ -181,6 +181,14 @@
 	        renderer.rerender();
 	    });
 
+	    events.mouseEnter(function(node){
+	    	$('.id').text(node.id);
+	    });
+
+	    events.mouseLeave(function(node){
+	    	$('.id').text("***");
+	    });
+
 	    // Node functions
 	    function DrawFocusedNode(node) {
 	        var nodeUI = graphics.getNodeUI(node.id);
