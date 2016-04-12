@@ -182,11 +182,16 @@
 	    });
 
 	    events.mouseEnter(function(node){
+	        	graph.forEachNode(NodeClearColor);
 	    	$('.id').text(node.id);
+	    	DrawNode(node.id);
+	    	renderer.rerender();
 	    });
 
 	    events.mouseLeave(function(node){
 	    	$('.id').text("***");
+	        	graph.forEachNode(NodeClearColor);
+	        	renderer.rerender();
 	    });
 
 	    // Node functions
